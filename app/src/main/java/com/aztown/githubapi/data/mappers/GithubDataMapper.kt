@@ -6,6 +6,7 @@ import com.aztown.githubapi.domain.entity.GitRepoEntity
 class GithubDataMapper {
 
     fun mapDtoToEntity(dto: ItemsDto?) = GitRepoEntity(
+        id = dto?.id,
         name = dto?.name,
         description = dto?.description,
         languages = dto?.language,

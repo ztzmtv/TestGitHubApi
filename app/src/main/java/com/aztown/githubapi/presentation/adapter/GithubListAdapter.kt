@@ -50,7 +50,7 @@ class GithubListAdapter :
 class GithubDiffCallback : DiffUtil.ItemCallback<GitRepoEntity>() {
     override fun areItemsTheSame(oldItem: GitRepoEntity, newItem: GitRepoEntity): Boolean {
         //TODO(проверить, уникально ли)
-        return oldItem.name == newItem.name
+        return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(oldItem: GitRepoEntity, newItem: GitRepoEntity): Boolean {
