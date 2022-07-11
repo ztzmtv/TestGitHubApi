@@ -71,20 +71,7 @@ class RepositoriesListFragment : Fragment() {
                 viewModel.load(newText)
                 return true
             }
-
         })
-
-//TODO(hmm, think about it)
-        savedInstanceState?.getString(SEARCH_STRING)?.let {
-            binding.searchView.setQuery(it, false)
-            binding.searchView.clearFocus()
-        }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        val searchString = binding.searchView.query
-        outState.putString(searchString.toString(), SEARCH_STRING)
     }
 
     override fun onDestroy() {
@@ -93,10 +80,6 @@ class RepositoriesListFragment : Fragment() {
     }
 
     companion object {
-        private const val SEARCH_STRING = "search_string"
-
-        fun newInstance(): RepositoriesListFragment {
-            return RepositoriesListFragment()
-        }
+        fun newInstance() = RepositoriesListFragment()
     }
 }
