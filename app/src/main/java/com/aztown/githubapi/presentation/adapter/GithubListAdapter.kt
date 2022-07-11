@@ -13,6 +13,8 @@ import com.bumptech.glide.request.RequestOptions
 class GithubListAdapter :
     PagingDataAdapter<GitRepoEntity, GithubListAdapter.GithubListViewHolder>(GithubDiffCallback()) {
 
+    var onRepoClickListener: ((username: String) -> Unit)? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GithubListViewHolder {
         val binding = RvItemRepositoryBinding.inflate(
             LayoutInflater.from(parent.context),
@@ -34,6 +36,12 @@ class GithubListAdapter :
                 .load(item.avatarUrl)
                 .apply(RequestOptions().override(PICTURE_SIZE_SQUARE, PICTURE_SIZE_SQUARE))
                 .into(ivAvatar)
+            root.setOnClickListener {
+                //TODO( does the ID must be nullable? )
+                item.ownerUsername?.let {
+                    onRepoClickListener?.invoke(it)
+                }
+            }
         }
     }
 
@@ -49,8 +57,7 @@ class GithubListAdapter :
 
 class GithubDiffCallback : DiffUtil.ItemCallback<GitRepoEntity>() {
     override fun areItemsTheSame(oldItem: GitRepoEntity, newItem: GitRepoEntity): Boolean {
-        //TODO(проверить, уникально ли)
-        return oldItem.name == newItem.name
+        return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(oldItem: GitRepoEntity, newItem: GitRepoEntity): Boolean {
