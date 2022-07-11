@@ -4,11 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.aztown.githubapi.databinding.FragmentRepositoriesListBinding
 import com.aztown.githubapi.presentation.adapter.GithubListAdapter
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class RepositoriesListFragment : Fragment() {
 
@@ -17,8 +22,6 @@ class RepositoriesListFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel by lazy { ViewModelProvider(this)[RepositoriesViewModel::class.java] }
-
-    private var githubAdapter: GithubListAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,21 +36,43 @@ class RepositoriesListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val recyclerView = binding.rvGithubList
+        val githubAdapter = GithubListAdapter()
+        recyclerView.adapter = githubAdapter
 
-        viewModel.gitHubListLiveData.observe(viewLifecycleOwner) {
-            githubAdapter = GithubListAdapter(it)
-            recyclerView.adapter = githubAdapter
+        val coroutineScope = viewLifecycleOwner.lifecycleScope
+
+        val deferred = coroutineScope.async {
+            viewModel.gitRepoFlow.collectLatest {
+                githubAdapter.submitData(it)
+            }
+        }
+
+        coroutineScope.launch {
+            try {
+                deferred.await()
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
+            }
         }
 
 
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                viewModel.loadData(query)
-                return true
+                return if (query != null) {
+                    viewModel.load(query)
+                    true
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Запрос пустой. Введите запрос",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    false
+                }
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                viewModel.loadData(newText)
+                viewModel.load(newText ?: "")
                 return true
             }
 

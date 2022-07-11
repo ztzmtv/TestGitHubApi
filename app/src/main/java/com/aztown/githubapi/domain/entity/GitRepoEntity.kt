@@ -1,6 +1,6 @@
 package com.aztown.githubapi.domain.entity
 
-data class GithubDataEntity(
+data class GitRepoEntity(
     val name: String? = null,
     val description: String? = null,
     val languages: String? = null,

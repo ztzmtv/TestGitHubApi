@@ -15,10 +15,6 @@ object ApiFactory {
         val original: Request = chain.request()
         val request: Request = original.newBuilder()
             .header("Accept", "application/vnd.github+json")
-            .header(
-                "Authorization",
-                "token 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"
-            ) //Знаю, что ключи нельзя так хранить, но у этого ключа никаких прав особо и нет.
             .method(original.method, original.body)
             .build()
         chain.proceed(request)

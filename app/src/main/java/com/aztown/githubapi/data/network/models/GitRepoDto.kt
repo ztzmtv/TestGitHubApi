@@ -2,7 +2,7 @@ package com.aztown.githubapi.data.network.models
 
 import com.google.gson.annotations.SerializedName
 
-data class GithubDataDto(
+data class GitRepoDto(
 
     @field:SerializedName("total_count")
     val totalCount: Int? = null,
