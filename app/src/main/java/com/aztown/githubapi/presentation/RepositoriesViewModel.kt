@@ -5,7 +5,8 @@ import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.aztown.githubapi.data.GithubRepositoryImpl
-import com.aztown.githubapi.domain.GithubRepository
+import com.aztown.githubapi.domain.GetRepositoriesUseCase
+import com.aztown.githubapi.domain.GetUserInfoUseCase
 import com.aztown.githubapi.domain.entity.GitRepoEntity
 import com.aztown.githubapi.domain.entity.GitUserEntity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -21,7 +22,11 @@ class RepositoriesViewModel(
     application: Application
 ) : AndroidViewModel(application) {
 
-    private val repository: GithubRepository = GithubRepositoryImpl()
+    private val repositoryImpl = GithubRepositoryImpl()
+
+    private val getRepositoriesUseCase = GetRepositoriesUseCase(repositoryImpl)
+
+    private val getUserInfoUseCase = GetUserInfoUseCase(repositoryImpl)
 
     private val queryLiveData = MutableLiveData(DEFAULT_EMPTY_STRING)
 
@@ -37,7 +42,7 @@ class RepositoriesViewModel(
             queryLiveData
                 .asFlow()
                 .debounce(TIMEOUT_IN_MILLIS)
-                .flatMapLatest { repository.getPagedGithubData(it) }
+                .flatMapLatest { getRepositoriesUseCase(it) }
                 .cachedIn(viewModelScope)
     }
 
@@ -50,7 +55,7 @@ class RepositoriesViewModel(
     fun getUserInfo(username: String?) {
         username ?: return
         viewModelScope.launch {
-            _userInfoLiveData.value = repository.getUserInfo(username)
+            _userInfoLiveData.value = getUserInfoUseCase(username)
         }
 
     }
