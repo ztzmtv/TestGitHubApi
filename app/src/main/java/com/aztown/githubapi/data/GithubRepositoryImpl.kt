@@ -14,18 +14,6 @@ import kotlinx.coroutines.flow.Flow
 class GithubRepositoryImpl() : GithubRepository {
     private val apiService = ApiFactory.apiService
 
-    override suspend fun getGithubData(query: String): List<GitRepoEntity> {
-        val mapper = GithubDataMapper()
-        val resultList = mutableListOf<GitRepoEntity>()
-        val response = apiService.getListOfRepositories(query)
-        val items = response.items
-        items?.let {
-            for (item in it) resultList += mapper.mapDtoToEntity(item)
-        }
-        Log.d("GithubRepositoryImpl_TAG", resultList.toString())
-        return resultList
-    }
-
     override suspend fun getPagedGithubData(query: String): Flow<PagingData<GitRepoEntity>> {
         return Pager(
             config = PagingConfig(

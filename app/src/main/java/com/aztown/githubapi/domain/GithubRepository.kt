@@ -6,8 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface GithubRepository {
 
-    suspend fun getGithubData(query: String): List<GitRepoEntity>
-
     suspend fun getPagedGithubData(query: String):Flow<PagingData<GitRepoEntity>>
 
 }

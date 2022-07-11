@@ -23,7 +23,7 @@ class RepositoriesViewModel(
 
     private val repository = GithubRepositoryImpl()
 
-    private val queryLiveData = MutableLiveData("yandex")
+    private val queryLiveData = MutableLiveData("")
 
     var gitRepoFlow: Flow<PagingData<GitRepoEntity>>
 
