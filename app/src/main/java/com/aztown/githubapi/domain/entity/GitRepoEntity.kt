@@ -7,5 +7,6 @@ data class GitRepoEntity(
     val languages: String? = null,
     val lastChange: String? = null,
     val avatarUrl: String? = null,
-    val starsCount: Int? = null
+    val starsCount: Int? = null,
+    val ownerUsername: String? = null
 )

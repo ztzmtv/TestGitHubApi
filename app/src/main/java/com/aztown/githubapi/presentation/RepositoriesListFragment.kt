@@ -9,9 +9,9 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.aztown.githubapi.R
 import com.aztown.githubapi.databinding.FragmentRepositoriesListBinding
 import com.aztown.githubapi.presentation.adapter.GithubListAdapter
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -39,22 +39,18 @@ class RepositoriesListFragment : Fragment() {
         val githubAdapter = GithubListAdapter()
         recyclerView.adapter = githubAdapter
 
-        val coroutineScope = viewLifecycleOwner.lifecycleScope
+        githubAdapter.onRepoClickListener = { username ->
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.container, RepositoryUserFragment.newInstance(username))
+                .addToBackStack(null)
+                .commit()
+        }
 
-        val deferred = coroutineScope.async {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.gitRepoFlow.collectLatest {
                 githubAdapter.submitData(it)
             }
         }
-
-        coroutineScope.launch {
-            try {
-                deferred.await()
-            } catch (e: Exception) {
-                Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
-            }
-        }
-
 
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -72,12 +68,13 @@ class RepositoriesListFragment : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                viewModel.load(newText ?: "")
+                viewModel.load(newText)
                 return true
             }
 
         })
 
+//TODO(hmm, think about it)
         savedInstanceState?.getString(SEARCH_STRING)?.let {
             binding.searchView.setQuery(it, false)
             binding.searchView.clearFocus()
@@ -97,7 +94,8 @@ class RepositoriesListFragment : Fragment() {
 
     companion object {
         private const val SEARCH_STRING = "search_string"
-        fun newInstance(): Fragment {
+
+        fun newInstance(): RepositoriesListFragment {
             return RepositoriesListFragment()
         }
     }

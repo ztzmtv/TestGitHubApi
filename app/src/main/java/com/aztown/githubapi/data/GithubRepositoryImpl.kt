@@ -9,6 +9,7 @@ import com.aztown.githubapi.data.network.ApiFactory
 import com.aztown.githubapi.data.paging.GithubDataPagingSource
 import com.aztown.githubapi.domain.GithubRepository
 import com.aztown.githubapi.domain.entity.GitRepoEntity
+import com.aztown.githubapi.domain.entity.GitUserEntity
 import kotlinx.coroutines.flow.Flow
 
 class GithubRepositoryImpl() : GithubRepository {
@@ -22,6 +23,15 @@ class GithubRepositoryImpl() : GithubRepository {
             ),
             pagingSourceFactory = { GithubDataPagingSource(query, apiService) },
         ).flow
+    }
+
+    override suspend fun getUserInfo(username: String): GitUserEntity {
+        val mapper = GithubDataMapper()
+        val result = mapper.mapUserDtoToEntity(
+            apiService.getRepoOwnerInfo(username)
+        )
+        Log.d("GithubRepositoryImpl_TAG", result.toString())
+        return result
     }
 
 

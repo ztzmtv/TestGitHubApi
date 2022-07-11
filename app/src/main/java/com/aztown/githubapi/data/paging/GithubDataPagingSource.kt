@@ -25,7 +25,7 @@ class GithubDataPagingSource(
             val githubData = mutableListOf<GitRepoEntity>()
             items?.let {
                 it.forEach { itemDto ->
-                    val itemEntity = mapper.mapDtoToEntity(itemDto)
+                    val itemEntity = mapper.mapItemDtoToEntity(itemDto)
                     githubData.add(itemEntity)
                 }
             }
