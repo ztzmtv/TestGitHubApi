@@ -4,8 +4,9 @@ import com.aztown.githubapi.data.network.models.GitUserDto
 import com.aztown.githubapi.data.network.models.ItemsDto
 import com.aztown.githubapi.domain.entity.GitRepoEntity
 import com.aztown.githubapi.domain.entity.GitUserEntity
+import javax.inject.Inject
 
-class GithubDataMapper {
+class GithubDataMapper @Inject constructor() {
     fun mapItemDtoToEntity(dto: ItemsDto?) = GitRepoEntity(
         id = dto?.id,
         name = dto?.name,

@@ -7,14 +7,17 @@ import com.aztown.githubapi.data.mappers.GithubDataMapper
 import com.aztown.githubapi.data.network.ApiService
 import com.aztown.githubapi.domain.entity.GitRepoEntity
 import retrofit2.HttpException
+import javax.inject.Inject
 
-class GithubDataPagingSource(
+class GithubDataPagingSource @Inject constructor(
     private val searchQuery: String,
-    private val apiService: ApiService
+    private val apiService: ApiService,
 ) : PagingSource<Int, GitRepoEntity>() {
 
+    @Inject
+    lateinit var  mapper : GithubDataMapper
+
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, GitRepoEntity> {
-        val mapper = GithubDataMapper()
         val pageIndex = params.key ?: FIRST_PAGE_NUMBER
         return try {
             val response = apiService.getListOfRepositories(
