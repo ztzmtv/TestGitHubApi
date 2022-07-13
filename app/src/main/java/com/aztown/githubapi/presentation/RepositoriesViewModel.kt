@@ -1,6 +1,5 @@
 package com.aztown.githubapi.presentation
 
-import android.app.Application
 import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
@@ -15,12 +14,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
-class RepositoriesViewModel(
-    application: Application
-) : AndroidViewModel(application) {
+class RepositoriesViewModel @Inject constructor(
+) : ViewModel() {
 
     private val repositoryImpl = GithubRepositoryImpl()
 
