@@ -89,6 +89,11 @@ class RepositoriesListFragment : Fragment() {
                 return true
             }
         })
+
+        binding.swipeRefresh.setOnRefreshListener {
+            viewModel.refresh()
+            binding.swipeRefresh.isRefreshing = false
+        }
     }
 
     override fun onDestroy() {
