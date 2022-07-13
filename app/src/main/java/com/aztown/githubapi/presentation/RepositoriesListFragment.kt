@@ -1,5 +1,6 @@
 package com.aztown.githubapi.presentation
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,7 @@ import com.aztown.githubapi.databinding.FragmentRepositoriesListBinding
 import com.aztown.githubapi.presentation.adapter.GithubListAdapter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class RepositoriesListFragment : Fragment() {
 
@@ -21,7 +23,20 @@ class RepositoriesListFragment : Fragment() {
 
     private val binding get() = _binding!!
 
-    private val viewModel by lazy { ViewModelProvider(this)[RepositoriesViewModel::class.java] }
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    @Inject
+    lateinit var githubAdapter: GithubListAdapter
+
+    private val component by lazy {
+        (requireActivity().application as GithubApplication).component
+    }
+
+    override fun onAttach(context: Context) {
+        component.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,8 +50,10 @@ class RepositoriesListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val viewModel =
+            ViewModelProvider(this, viewModelFactory).get(RepositoriesViewModel::class.java)
+
         val recyclerView = binding.rvGithubList
-        val githubAdapter = GithubListAdapter()
         recyclerView.adapter = githubAdapter
 
         githubAdapter.onRepoClickListener = { username ->

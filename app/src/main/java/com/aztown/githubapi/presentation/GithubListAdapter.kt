@@ -9,8 +9,9 @@ import com.aztown.githubapi.databinding.RvItemRepositoryBinding
 import com.aztown.githubapi.domain.entity.GitRepoEntity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import javax.inject.Inject
 
-class GithubListAdapter :
+class GithubListAdapter @Inject constructor() :
     PagingDataAdapter<GitRepoEntity, GithubListAdapter.GithubListViewHolder>(GithubDiffCallback()) {
 
     var onRepoClickListener: ((username: String) -> Unit)? = null

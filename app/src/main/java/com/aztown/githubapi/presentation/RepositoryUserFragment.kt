@@ -1,5 +1,6 @@
 package com.aztown.githubapi.presentation
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.aztown.githubapi.databinding.FragmentRepositoryOwnerBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import javax.inject.Inject
 
 
 class RepositoryUserFragment : Fragment() {
@@ -17,7 +19,18 @@ class RepositoryUserFragment : Fragment() {
 
     private val binding get() = _binding!!
 
-    private val viewModel by lazy { ViewModelProvider(this)[RepositoriesViewModel::class.java] }
+    //private val viewModel by lazy { ViewModelProvider(this)[RepositoriesViewModel::class.java] }
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    private val component by lazy {
+        (requireActivity().application as GithubApplication).component
+    }
+
+    override fun onAttach(context: Context) {
+        component.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,6 +43,9 @@ class RepositoryUserFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val viewModel =
+            ViewModelProvider(this, viewModelFactory).get(RepositoriesViewModel::class.java)
 
         val username = requireArguments().getString(USERNAME)
         viewModel.getUserInfo(username)
