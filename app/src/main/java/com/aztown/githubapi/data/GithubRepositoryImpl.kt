@@ -11,8 +11,9 @@ import com.aztown.githubapi.domain.GithubRepository
 import com.aztown.githubapi.domain.entity.GitRepoEntity
 import com.aztown.githubapi.domain.entity.GitUserEntity
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class GithubRepositoryImpl() : GithubRepository {
+class GithubRepositoryImpl @Inject constructor() : GithubRepository {
     private val apiService = ApiFactory.apiService
 
     override suspend fun getPagedGithubData(query: String): Flow<PagingData<GitRepoEntity>> {

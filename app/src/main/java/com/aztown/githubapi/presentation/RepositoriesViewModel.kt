@@ -3,7 +3,6 @@ package com.aztown.githubapi.presentation
 import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.aztown.githubapi.data.GithubRepositoryImpl
 import com.aztown.githubapi.domain.GetRepositoriesUseCase
 import com.aztown.githubapi.domain.GetUserInfoUseCase
 import com.aztown.githubapi.domain.entity.GitRepoEntity
@@ -19,13 +18,9 @@ import javax.inject.Inject
 
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class RepositoriesViewModel @Inject constructor(
+    private val getRepositoriesUseCase: GetRepositoriesUseCase,
+    private val getUserInfoUseCase: GetUserInfoUseCase
 ) : ViewModel() {
-
-    private val repositoryImpl = GithubRepositoryImpl()
-
-    private val getRepositoriesUseCase = GetRepositoriesUseCase(repositoryImpl)
-
-    private val getUserInfoUseCase = GetUserInfoUseCase(repositoryImpl)
 
     private val queryLiveData = MutableLiveData(DEFAULT_EMPTY_STRING)
 

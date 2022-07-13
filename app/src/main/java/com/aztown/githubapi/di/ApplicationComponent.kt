@@ -4,7 +4,12 @@ import com.aztown.githubapi.presentation.RepositoriesListFragment
 import com.aztown.githubapi.presentation.RepositoryUserFragment
 import dagger.Component
 
-@Component(modules = [ViewModelModule::class])
+@Component(
+    modules = [
+        DataModule::class,
+        ViewModelModule::class
+    ]
+)
 interface ApplicationComponent {
 
     fun inject(repositoriesListFragment: RepositoriesListFragment)
