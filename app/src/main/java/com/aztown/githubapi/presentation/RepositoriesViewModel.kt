@@ -51,7 +51,10 @@ class RepositoriesViewModel @Inject constructor(
         viewModelScope.launch {
             _userInfoLiveData.value = getUserInfoUseCase(username)
         }
+    }
 
+    fun refresh() {
+        this.queryLiveData.postValue(this.queryLiveData.value)
     }
 
     companion object {
