@@ -13,7 +13,9 @@ import com.aztown.githubapi.domain.entity.GitUserEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GithubRepositoryImpl @Inject constructor() : GithubRepository {
+class GithubRepositoryImpl @Inject constructor(
+    private val mapper: GithubDataMapper
+) : GithubRepository {
     private val apiService = ApiFactory.apiService
 
     override suspend fun getPagedGithubData(query: String): Flow<PagingData<GitRepoEntity>> {
@@ -27,7 +29,6 @@ class GithubRepositoryImpl @Inject constructor() : GithubRepository {
     }
 
     override suspend fun getUserInfo(username: String): GitUserEntity {
-        val mapper = GithubDataMapper()
         val result = mapper.mapUserDtoToEntity(
             apiService.getRepoOwnerInfo(username)
         )
