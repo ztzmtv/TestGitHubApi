@@ -72,7 +72,7 @@ class RepositoriesListFragment : Fragment() {
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return if (query != null) {
-                    viewModel.load(query)
+                    viewModel.loadRepositories(query)
                     true
                 } else {
                     Toast.makeText(
@@ -85,7 +85,7 @@ class RepositoriesListFragment : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                viewModel.load(newText)
+                viewModel.loadRepositories(newText)
                 return true
             }
         })
