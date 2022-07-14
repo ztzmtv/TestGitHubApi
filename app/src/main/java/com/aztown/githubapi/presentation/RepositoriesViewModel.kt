@@ -40,7 +40,7 @@ class RepositoriesViewModel @Inject constructor(
                 .cachedIn(viewModelScope)
     }
 
-    fun load(query: String?) {
+    fun loadRepositories(query: String?) {
         query ?: return
         if (this.queryLiveData.value == query) return
         this.queryLiveData.value = query
